@@ -1,0 +1,706 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ANSI-C Compiler
+                                      3 ; Version 3.8.0 #10562 (Linux)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module ds1302
+                                      6 	.optsdcc -mmcs51 --model-small
+                                      7 	
+                                      8 ;--------------------------------------------------------
+                                      9 ; Public variables in this module
+                                     10 ;--------------------------------------------------------
+                                     11 	.globl _readbyte
+                                     12 	.globl _sendbyte
+                                     13 	.globl _P5_7
+                                     14 	.globl _P5_6
+                                     15 	.globl _P5_5
+                                     16 	.globl _P5_4
+                                     17 	.globl _P5_3
+                                     18 	.globl _P5_2
+                                     19 	.globl _P5_1
+                                     20 	.globl _P5_0
+                                     21 	.globl _CY
+                                     22 	.globl _AC
+                                     23 	.globl _F0
+                                     24 	.globl _RS1
+                                     25 	.globl _RS0
+                                     26 	.globl _OV
+                                     27 	.globl _FL
+                                     28 	.globl _P
+                                     29 	.globl _TF2
+                                     30 	.globl _EXF2
+                                     31 	.globl _RCLK
+                                     32 	.globl _TCLK
+                                     33 	.globl _EXEN2
+                                     34 	.globl _TR2
+                                     35 	.globl _C_T2
+                                     36 	.globl _CP_RL2
+                                     37 	.globl _T2CON_7
+                                     38 	.globl _T2CON_6
+                                     39 	.globl _T2CON_5
+                                     40 	.globl _T2CON_4
+                                     41 	.globl _T2CON_3
+                                     42 	.globl _T2CON_2
+                                     43 	.globl _T2CON_1
+                                     44 	.globl _T2CON_0
+                                     45 	.globl _PT2
+                                     46 	.globl _PS
+                                     47 	.globl _PT1
+                                     48 	.globl _PX1
+                                     49 	.globl _PT0
+                                     50 	.globl _PX0
+                                     51 	.globl _RD
+                                     52 	.globl _WR
+                                     53 	.globl _T1
+                                     54 	.globl _T0
+                                     55 	.globl _INT1
+                                     56 	.globl _INT0
+                                     57 	.globl _TXD
+                                     58 	.globl _RXD
+                                     59 	.globl _P3_7
+                                     60 	.globl _P3_6
+                                     61 	.globl _P3_5
+                                     62 	.globl _P3_4
+                                     63 	.globl _P3_3
+                                     64 	.globl _P3_2
+                                     65 	.globl _P3_1
+                                     66 	.globl _P3_0
+                                     67 	.globl _EA
+                                     68 	.globl _ET2
+                                     69 	.globl _ES
+                                     70 	.globl _ET1
+                                     71 	.globl _EX1
+                                     72 	.globl _ET0
+                                     73 	.globl _EX0
+                                     74 	.globl _P2_7
+                                     75 	.globl _P2_6
+                                     76 	.globl _P2_5
+                                     77 	.globl _P2_4
+                                     78 	.globl _P2_3
+                                     79 	.globl _P2_2
+                                     80 	.globl _P2_1
+                                     81 	.globl _P2_0
+                                     82 	.globl _SM0
+                                     83 	.globl _SM1
+                                     84 	.globl _SM2
+                                     85 	.globl _REN
+                                     86 	.globl _TB8
+                                     87 	.globl _RB8
+                                     88 	.globl _TI
+                                     89 	.globl _RI
+                                     90 	.globl _T2EX
+                                     91 	.globl _T2
+                                     92 	.globl _P1_7
+                                     93 	.globl _P1_6
+                                     94 	.globl _P1_5
+                                     95 	.globl _P1_4
+                                     96 	.globl _P1_3
+                                     97 	.globl _P1_2
+                                     98 	.globl _P1_1
+                                     99 	.globl _P1_0
+                                    100 	.globl _TF1
+                                    101 	.globl _TR1
+                                    102 	.globl _TF0
+                                    103 	.globl _TR0
+                                    104 	.globl _IE1
+                                    105 	.globl _IT1
+                                    106 	.globl _IE0
+                                    107 	.globl _IT0
+                                    108 	.globl _P0_7
+                                    109 	.globl _P0_6
+                                    110 	.globl _P0_5
+                                    111 	.globl _P0_4
+                                    112 	.globl _P0_3
+                                    113 	.globl _P0_2
+                                    114 	.globl _P0_1
+                                    115 	.globl _P0_0
+                                    116 	.globl _CLK_DIV
+                                    117 	.globl _P5M1
+                                    118 	.globl _P5M0
+                                    119 	.globl _P1M1
+                                    120 	.globl _P1M0
+                                    121 	.globl _P3M1
+                                    122 	.globl _P3M0
+                                    123 	.globl _P5
+                                    124 	.globl _AUXR
+                                    125 	.globl _B
+                                    126 	.globl _A
+                                    127 	.globl _ACC
+                                    128 	.globl _PSW
+                                    129 	.globl _TH2
+                                    130 	.globl _TL2
+                                    131 	.globl _RCAP2H
+                                    132 	.globl _RCAP2L
+                                    133 	.globl _T2MOD
+                                    134 	.globl _T2CON
+                                    135 	.globl _IP
+                                    136 	.globl _P3
+                                    137 	.globl _IE
+                                    138 	.globl _P2
+                                    139 	.globl _SBUF
+                                    140 	.globl _SCON
+                                    141 	.globl _P1
+                                    142 	.globl _TH1
+                                    143 	.globl _TH0
+                                    144 	.globl _TL1
+                                    145 	.globl _TL0
+                                    146 	.globl _TMOD
+                                    147 	.globl _TCON
+                                    148 	.globl _PCON
+                                    149 	.globl _DPH
+                                    150 	.globl _DPL
+                                    151 	.globl _SP
+                                    152 	.globl _P0
+                                    153 	.globl _CONF_SW_MMDD
+                                    154 	.globl _CONF_CHIME_ON
+                                    155 	.globl _CONF_ALARM_ON
+                                    156 	.globl _CONF_C_F
+                                    157 	.globl _H12_12
+                                    158 	.globl _H12_PM
+                                    159 	.globl _H12_TH
+                                    160 	.globl _ds_writebyte_PARM_2
+                                    161 	.globl _cfg_table
+                                    162 	.globl _rtc_table
+                                    163 	.globl _ds_readbyte
+                                    164 	.globl _ds_writebyte
+                                    165 	.globl _ds_init
+                                    166 	.globl _ds_split2int
+                                    167 	.globl _ds_int2bcd
+                                    168 	.globl _ds_int2bcd_tens
+                                    169 	.globl _ds_int2bcd_ones
+                                    170 ;--------------------------------------------------------
+                                    171 ; special function registers
+                                    172 ;--------------------------------------------------------
+                                    173 	.area RSEG    (ABS,DATA)
+      000000                        174 	.org 0x0000
+                           000080   175 _P0	=	0x0080
+                           000081   176 _SP	=	0x0081
+                           000082   177 _DPL	=	0x0082
+                           000083   178 _DPH	=	0x0083
+                           000087   179 _PCON	=	0x0087
+                           000088   180 _TCON	=	0x0088
+                           000089   181 _TMOD	=	0x0089
+                           00008A   182 _TL0	=	0x008a
+                           00008B   183 _TL1	=	0x008b
+                           00008C   184 _TH0	=	0x008c
+                           00008D   185 _TH1	=	0x008d
+                           000090   186 _P1	=	0x0090
+                           000098   187 _SCON	=	0x0098
+                           000099   188 _SBUF	=	0x0099
+                           0000A0   189 _P2	=	0x00a0
+                           0000A8   190 _IE	=	0x00a8
+                           0000B0   191 _P3	=	0x00b0
+                           0000B8   192 _IP	=	0x00b8
+                           0000C8   193 _T2CON	=	0x00c8
+                           0000C9   194 _T2MOD	=	0x00c9
+                           0000CA   195 _RCAP2L	=	0x00ca
+                           0000CB   196 _RCAP2H	=	0x00cb
+                           0000CC   197 _TL2	=	0x00cc
+                           0000CD   198 _TH2	=	0x00cd
+                           0000D0   199 _PSW	=	0x00d0
+                           0000E0   200 _ACC	=	0x00e0
+                           0000E0   201 _A	=	0x00e0
+                           0000F0   202 _B	=	0x00f0
+                           00008E   203 _AUXR	=	0x008e
+                           0000C8   204 _P5	=	0x00c8
+                           0000B2   205 _P3M0	=	0x00b2
+                           0000B1   206 _P3M1	=	0x00b1
+                           000092   207 _P1M0	=	0x0092
+                           000091   208 _P1M1	=	0x0091
+                           0000CA   209 _P5M0	=	0x00ca
+                           0000C9   210 _P5M1	=	0x00c9
+                           000097   211 _CLK_DIV	=	0x0097
+                                    212 ;--------------------------------------------------------
+                                    213 ; special function bits
+                                    214 ;--------------------------------------------------------
+                                    215 	.area RSEG    (ABS,DATA)
+      000000                        216 	.org 0x0000
+                           000080   217 _P0_0	=	0x0080
+                           000081   218 _P0_1	=	0x0081
+                           000082   219 _P0_2	=	0x0082
+                           000083   220 _P0_3	=	0x0083
+                           000084   221 _P0_4	=	0x0084
+                           000085   222 _P0_5	=	0x0085
+                           000086   223 _P0_6	=	0x0086
+                           000087   224 _P0_7	=	0x0087
+                           000088   225 _IT0	=	0x0088
+                           000089   226 _IE0	=	0x0089
+                           00008A   227 _IT1	=	0x008a
+                           00008B   228 _IE1	=	0x008b
+                           00008C   229 _TR0	=	0x008c
+                           00008D   230 _TF0	=	0x008d
+                           00008E   231 _TR1	=	0x008e
+                           00008F   232 _TF1	=	0x008f
+                           000090   233 _P1_0	=	0x0090
+                           000091   234 _P1_1	=	0x0091
+                           000092   235 _P1_2	=	0x0092
+                           000093   236 _P1_3	=	0x0093
+                           000094   237 _P1_4	=	0x0094
+                           000095   238 _P1_5	=	0x0095
+                           000096   239 _P1_6	=	0x0096
+                           000097   240 _P1_7	=	0x0097
+                           000090   241 _T2	=	0x0090
+                           000091   242 _T2EX	=	0x0091
+                           000098   243 _RI	=	0x0098
+                           000099   244 _TI	=	0x0099
+                           00009A   245 _RB8	=	0x009a
+                           00009B   246 _TB8	=	0x009b
+                           00009C   247 _REN	=	0x009c
+                           00009D   248 _SM2	=	0x009d
+                           00009E   249 _SM1	=	0x009e
+                           00009F   250 _SM0	=	0x009f
+                           0000A0   251 _P2_0	=	0x00a0
+                           0000A1   252 _P2_1	=	0x00a1
+                           0000A2   253 _P2_2	=	0x00a2
+                           0000A3   254 _P2_3	=	0x00a3
+                           0000A4   255 _P2_4	=	0x00a4
+                           0000A5   256 _P2_5	=	0x00a5
+                           0000A6   257 _P2_6	=	0x00a6
+                           0000A7   258 _P2_7	=	0x00a7
+                           0000A8   259 _EX0	=	0x00a8
+                           0000A9   260 _ET0	=	0x00a9
+                           0000AA   261 _EX1	=	0x00aa
+                           0000AB   262 _ET1	=	0x00ab
+                           0000AC   263 _ES	=	0x00ac
+                           0000AD   264 _ET2	=	0x00ad
+                           0000AF   265 _EA	=	0x00af
+                           0000B0   266 _P3_0	=	0x00b0
+                           0000B1   267 _P3_1	=	0x00b1
+                           0000B2   268 _P3_2	=	0x00b2
+                           0000B3   269 _P3_3	=	0x00b3
+                           0000B4   270 _P3_4	=	0x00b4
+                           0000B5   271 _P3_5	=	0x00b5
+                           0000B6   272 _P3_6	=	0x00b6
+                           0000B7   273 _P3_7	=	0x00b7
+                           0000B0   274 _RXD	=	0x00b0
+                           0000B1   275 _TXD	=	0x00b1
+                           0000B2   276 _INT0	=	0x00b2
+                           0000B3   277 _INT1	=	0x00b3
+                           0000B4   278 _T0	=	0x00b4
+                           0000B5   279 _T1	=	0x00b5
+                           0000B6   280 _WR	=	0x00b6
+                           0000B7   281 _RD	=	0x00b7
+                           0000B8   282 _PX0	=	0x00b8
+                           0000B9   283 _PT0	=	0x00b9
+                           0000BA   284 _PX1	=	0x00ba
+                           0000BB   285 _PT1	=	0x00bb
+                           0000BC   286 _PS	=	0x00bc
+                           0000BD   287 _PT2	=	0x00bd
+                           0000C8   288 _T2CON_0	=	0x00c8
+                           0000C9   289 _T2CON_1	=	0x00c9
+                           0000CA   290 _T2CON_2	=	0x00ca
+                           0000CB   291 _T2CON_3	=	0x00cb
+                           0000CC   292 _T2CON_4	=	0x00cc
+                           0000CD   293 _T2CON_5	=	0x00cd
+                           0000CE   294 _T2CON_6	=	0x00ce
+                           0000CF   295 _T2CON_7	=	0x00cf
+                           0000C8   296 _CP_RL2	=	0x00c8
+                           0000C9   297 _C_T2	=	0x00c9
+                           0000CA   298 _TR2	=	0x00ca
+                           0000CB   299 _EXEN2	=	0x00cb
+                           0000CC   300 _TCLK	=	0x00cc
+                           0000CD   301 _RCLK	=	0x00cd
+                           0000CE   302 _EXF2	=	0x00ce
+                           0000CF   303 _TF2	=	0x00cf
+                           0000D0   304 _P	=	0x00d0
+                           0000D1   305 _FL	=	0x00d1
+                           0000D2   306 _OV	=	0x00d2
+                           0000D3   307 _RS0	=	0x00d3
+                           0000D4   308 _RS1	=	0x00d4
+                           0000D5   309 _F0	=	0x00d5
+                           0000D6   310 _AC	=	0x00d6
+                           0000D7   311 _CY	=	0x00d7
+                           0000C8   312 _P5_0	=	0x00c8
+                           0000C9   313 _P5_1	=	0x00c9
+                           0000CA   314 _P5_2	=	0x00ca
+                           0000CB   315 _P5_3	=	0x00cb
+                           0000CC   316 _P5_4	=	0x00cc
+                           0000CD   317 _P5_5	=	0x00cd
+                           0000CE   318 _P5_6	=	0x00ce
+                           0000CF   319 _P5_7	=	0x00cf
+                                    320 ;--------------------------------------------------------
+                                    321 ; overlayable register banks
+                                    322 ;--------------------------------------------------------
+                                    323 	.area REG_BANK_0	(REL,OVR,DATA)
+      000000                        324 	.ds 8
+                                    325 ;--------------------------------------------------------
+                                    326 ; internal ram data
+                                    327 ;--------------------------------------------------------
+                                    328 	.area DSEG    (DATA)
+                           000024   329 _rtc_table	=	0x0024
+                           00002C   330 _cfg_table	=	0x002c
+      000016                        331 _ds_writebyte_PARM_2:
+      000016                        332 	.ds 1
+                                    333 ;--------------------------------------------------------
+                                    334 ; overlayable items in internal ram 
+                                    335 ;--------------------------------------------------------
+                                    336 	.area	OSEG    (OVR,DATA)
+                                    337 	.area	OSEG    (OVR,DATA)
+                                    338 ;--------------------------------------------------------
+                                    339 ; indirectly addressable internal ram data
+                                    340 ;--------------------------------------------------------
+                                    341 	.area ISEG    (DATA)
+                                    342 ;--------------------------------------------------------
+                                    343 ; absolute internal ram data
+                                    344 ;--------------------------------------------------------
+                                    345 	.area IABS    (ABS,DATA)
+                                    346 	.area IABS    (ABS,DATA)
+                                    347 ;--------------------------------------------------------
+                                    348 ; bit data
+                                    349 ;--------------------------------------------------------
+                                    350 	.area BSEG    (BIT)
+                           000034   351 _H12_TH	=	0x0034
+                           000035   352 _H12_PM	=	0x0035
+                           000037   353 _H12_12	=	0x0037
+                           000060   354 _CONF_C_F	=	0x0060
+                           000061   355 _CONF_ALARM_ON	=	0x0061
+                           000062   356 _CONF_CHIME_ON	=	0x0062
+                           00006E   357 _CONF_SW_MMDD	=	0x006e
+                                    358 ;--------------------------------------------------------
+                                    359 ; paged external ram data
+                                    360 ;--------------------------------------------------------
+                                    361 	.area PSEG    (PAG,XDATA)
+                                    362 ;--------------------------------------------------------
+                                    363 ; external ram data
+                                    364 ;--------------------------------------------------------
+                                    365 	.area XSEG    (XDATA)
+                                    366 ;--------------------------------------------------------
+                                    367 ; absolute external ram data
+                                    368 ;--------------------------------------------------------
+                                    369 	.area XABS    (ABS,XDATA)
+                                    370 ;--------------------------------------------------------
+                                    371 ; external initialized ram data
+                                    372 ;--------------------------------------------------------
+                                    373 	.area XISEG   (XDATA)
+                                    374 	.area HOME    (CODE)
+                                    375 	.area GSINIT0 (CODE)
+                                    376 	.area GSINIT1 (CODE)
+                                    377 	.area GSINIT2 (CODE)
+                                    378 	.area GSINIT3 (CODE)
+                                    379 	.area GSINIT4 (CODE)
+                                    380 	.area GSINIT5 (CODE)
+                                    381 	.area GSINIT  (CODE)
+                                    382 	.area GSFINAL (CODE)
+                                    383 	.area CSEG    (CODE)
+                                    384 ;--------------------------------------------------------
+                                    385 ; global & static initialisations
+                                    386 ;--------------------------------------------------------
+                                    387 	.area HOME    (CODE)
+                                    388 	.area GSINIT  (CODE)
+                                    389 	.area GSFINAL (CODE)
+                                    390 	.area GSINIT  (CODE)
+                                    391 ;--------------------------------------------------------
+                                    392 ; Home
+                                    393 ;--------------------------------------------------------
+                                    394 	.area HOME    (CODE)
+                                    395 	.area HOME    (CODE)
+                                    396 ;--------------------------------------------------------
+                                    397 ; code
+                                    398 ;--------------------------------------------------------
+                                    399 	.area CSEG    (CODE)
+                                    400 ;------------------------------------------------------------
+                                    401 ;Allocation info for local variables in function 'sendbyte'
+                                    402 ;------------------------------------------------------------
+                                    403 ;b                         Allocated to registers 
+                                    404 ;------------------------------------------------------------
+                                    405 ;	ds1302.c:64: void sendbyte(unsigned char b)
+                                    406 ;	-----------------------------------------
+                                    407 ;	 function sendbyte
+                                    408 ;	-----------------------------------------
+      00037E                        409 _sendbyte:
+                           000007   410 	ar7 = 0x07
+                           000006   411 	ar6 = 0x06
+                           000005   412 	ar5 = 0x05
+                           000004   413 	ar4 = 0x04
+                           000003   414 	ar3 = 0x03
+                           000002   415 	ar2 = 0x02
+                           000001   416 	ar1 = 0x01
+                           000000   417 	ar0 = 0x00
+                                    418 ;	ds1302.c:90: __endasm;
+      00037E C0 07            [24]  419 	push	ar7
+      000380 E5 82            [12]  420 	mov	a,dpl
+      000382 7F 08            [12]  421 	mov	r7,#8
+      000384                        422 	00001$:
+      000384 00               [12]  423 	nop
+      000385 00               [12]  424 	nop
+      000386 00               [12]  425 	nop
+      000387 00               [12]  426 	nop
+      000388 00               [12]  427 	nop
+      000389 00               [12]  428 	nop
+      00038A 13               [12]  429 	rrc	a
+      00038B 92 CC            [24]  430 	mov	0xCC,c
+      00038D D2 CD            [12]  431 	setb	0xCD
+      00038F 00               [12]  432 	nop
+      000390 00               [12]  433 	nop
+      000391 00               [12]  434 	nop
+      000392 00               [12]  435 	nop
+      000393 00               [12]  436 	nop
+      000394 00               [12]  437 	nop
+      000395 C2 CD            [12]  438 	clr	0xCD
+      000397 DF EB            [24]  439 	djnz	r7,00001$
+      000399 D0 07            [24]  440 	pop	ar7
+                                    441 ;	ds1302.c:91: }
+      00039B 22               [24]  442 	ret
+                                    443 ;------------------------------------------------------------
+                                    444 ;Allocation info for local variables in function 'readbyte'
+                                    445 ;------------------------------------------------------------
+                                    446 ;	ds1302.c:93: unsigned char readbyte()
+                                    447 ;	-----------------------------------------
+                                    448 ;	 function readbyte
+                                    449 ;	-----------------------------------------
+      00039C                        450 _readbyte:
+                                    451 ;	ds1302.c:120: __endasm;
+      00039C C0 07            [24]  452 	push	ar7
+      00039E 74 00            [12]  453 	mov	a,#0
+      0003A0 7F 08            [12]  454 	mov	r7,#8
+      0003A2                        455 	00002$:
+      0003A2 00               [12]  456 	nop
+      0003A3 00               [12]  457 	nop
+      0003A4 00               [12]  458 	nop
+      0003A5 00               [12]  459 	nop
+      0003A6 00               [12]  460 	nop
+      0003A7 00               [12]  461 	nop
+      0003A8 A2 CC            [12]  462 	mov	c,0xCC
+      0003AA 13               [12]  463 	rrc	a
+      0003AB D2 CD            [12]  464 	setb	0xCD
+      0003AD 00               [12]  465 	nop
+      0003AE 00               [12]  466 	nop
+      0003AF 00               [12]  467 	nop
+      0003B0 00               [12]  468 	nop
+      0003B1 00               [12]  469 	nop
+      0003B2 00               [12]  470 	nop
+      0003B3 C2 CD            [12]  471 	clr	0xCD
+      0003B5 DF EB            [24]  472 	djnz	r7,00002$
+      0003B7 F5 82            [12]  473 	mov	dpl,a
+      0003B9 D0 07            [24]  474 	pop	ar7
+                                    475 ;	ds1302.c:121: }
+      0003BB 22               [24]  476 	ret
+                                    477 ;------------------------------------------------------------
+                                    478 ;Allocation info for local variables in function 'ds_readbyte'
+                                    479 ;------------------------------------------------------------
+                                    480 ;addr                      Allocated to registers 
+                                    481 ;b                         Allocated to registers 
+                                    482 ;------------------------------------------------------------
+                                    483 ;	ds1302.c:123: unsigned char ds_readbyte(unsigned char addr) {
+                                    484 ;	-----------------------------------------
+                                    485 ;	 function ds_readbyte
+                                    486 ;	-----------------------------------------
+      0003BC                        487 _ds_readbyte:
+                                    488 ;	ds1302.c:127: DS_CE = 0;
+                                    489 ;	assignBit
+      0003BC C2 B6            [12]  490 	clr	_P3_6
+                                    491 ;	ds1302.c:128: DS_SCLK = 0;
+                                    492 ;	assignBit
+      0003BE C2 CD            [12]  493 	clr	_P5_5
+                                    494 ;	ds1302.c:129: DS_CE = 1;
+                                    495 ;	assignBit
+      0003C0 D2 B6            [12]  496 	setb	_P3_6
+                                    497 ;	ds1302.c:131: P5M0 = 0b000010000;
+      0003C2 75 CA 10         [24]  498 	mov	_P5M0,#0x10
+                                    499 ;	ds1302.c:132: P5M1 = 0b000000000;
+      0003C5 75 C9 00         [24]  500 	mov	_P5M1,#0x00
+                                    501 ;	ds1302.c:133: sendbyte(b);
+      0003C8 12 03 7E         [24]  502 	lcall	_sendbyte
+                                    503 ;	ds1302.c:134: P5M0 = 0b000000000;
+      0003CB 75 CA 00         [24]  504 	mov	_P5M0,#0x00
+                                    505 ;	ds1302.c:135: P5M1 = 0b000000000;
+      0003CE 75 C9 00         [24]  506 	mov	_P5M1,#0x00
+                                    507 ;	ds1302.c:137: P5M0 = 0b000000000;
+      0003D1 75 CA 00         [24]  508 	mov	_P5M0,#0x00
+                                    509 ;	ds1302.c:138: P5M1 = 0b000010000;
+      0003D4 75 C9 10         [24]  510 	mov	_P5M1,#0x10
+                                    511 ;	ds1302.c:139: b = readbyte();
+      0003D7 12 03 9C         [24]  512 	lcall	_readbyte
+                                    513 ;	ds1302.c:140: DS_CE = 0;
+                                    514 ;	assignBit
+      0003DA C2 B6            [12]  515 	clr	_P3_6
+                                    516 ;	ds1302.c:141: P5M0 = 0b000000000;
+      0003DC 75 CA 00         [24]  517 	mov	_P5M0,#0x00
+                                    518 ;	ds1302.c:142: P5M1 = 0b000000000;
+      0003DF 75 C9 00         [24]  519 	mov	_P5M1,#0x00
+                                    520 ;	ds1302.c:143: return b;
+                                    521 ;	ds1302.c:144: }
+      0003E2 22               [24]  522 	ret
+                                    523 ;------------------------------------------------------------
+                                    524 ;Allocation info for local variables in function 'ds_writebyte'
+                                    525 ;------------------------------------------------------------
+                                    526 ;data                      Allocated with name '_ds_writebyte_PARM_2'
+                                    527 ;addr                      Allocated to registers 
+                                    528 ;b                         Allocated to registers 
+                                    529 ;------------------------------------------------------------
+                                    530 ;	ds1302.c:162: void ds_writebyte(unsigned char addr, unsigned char data) {
+                                    531 ;	-----------------------------------------
+                                    532 ;	 function ds_writebyte
+                                    533 ;	-----------------------------------------
+      0003E3                        534 _ds_writebyte:
+                                    535 ;	ds1302.c:166: DS_CE = 0;
+                                    536 ;	assignBit
+      0003E3 C2 B6            [12]  537 	clr	_P3_6
+                                    538 ;	ds1302.c:167: DS_SCLK = 0;
+                                    539 ;	assignBit
+      0003E5 C2 CD            [12]  540 	clr	_P5_5
+                                    541 ;	ds1302.c:168: DS_CE = 1;
+                                    542 ;	assignBit
+      0003E7 D2 B6            [12]  543 	setb	_P3_6
+                                    544 ;	ds1302.c:170: P5M0 = 0b000010000;
+      0003E9 75 CA 10         [24]  545 	mov	_P5M0,#0x10
+                                    546 ;	ds1302.c:171: P5M1 = 0b000000000;
+      0003EC 75 C9 00         [24]  547 	mov	_P5M1,#0x00
+                                    548 ;	ds1302.c:172: sendbyte(b);
+      0003EF 12 03 7E         [24]  549 	lcall	_sendbyte
+                                    550 ;	ds1302.c:174: sendbyte(data);
+      0003F2 85 16 82         [24]  551 	mov	dpl,_ds_writebyte_PARM_2
+      0003F5 12 03 7E         [24]  552 	lcall	_sendbyte
+                                    553 ;	ds1302.c:175: P5M0 = 0b000000000;
+      0003F8 75 CA 00         [24]  554 	mov	_P5M0,#0x00
+                                    555 ;	ds1302.c:176: P5M1 = 0b000000000;
+      0003FB 75 C9 00         [24]  556 	mov	_P5M1,#0x00
+                                    557 ;	ds1302.c:177: DS_CE = 0;
+                                    558 ;	assignBit
+      0003FE C2 B6            [12]  559 	clr	_P3_6
+                                    560 ;	ds1302.c:178: }
+      000400 22               [24]  561 	ret
+                                    562 ;------------------------------------------------------------
+                                    563 ;Allocation info for local variables in function 'ds_init'
+                                    564 ;------------------------------------------------------------
+                                    565 ;b                         Allocated to registers 
+                                    566 ;------------------------------------------------------------
+                                    567 ;	ds1302.c:187: void ds_init() 
+                                    568 ;	-----------------------------------------
+                                    569 ;	 function ds_init
+                                    570 ;	-----------------------------------------
+      000401                        571 _ds_init:
+                                    572 ;	ds1302.c:189: unsigned char b = ds_readbyte(0x81);
+      000401 75 82 81         [24]  573 	mov	dpl,#0x81
+      000404 12 03 BC         [24]  574 	lcall	_ds_readbyte
+      000407 AF 82            [24]  575 	mov	r7,dpl
+                                    576 ;	ds1302.c:190: ds_writebyte(0x8E, 0); // clear WP
+      000409 75 16 00         [24]  577 	mov	_ds_writebyte_PARM_2,#0x00
+      00040C 75 82 8E         [24]  578 	mov	dpl,#0x8e
+      00040F 12 03 E3         [24]  579 	lcall	_ds_writebyte
+                                    580 ;	ds1302.c:191: b &= ~(0b10000000);	// clear Bit7
+      000412 74 7F            [12]  581 	mov	a,#0x7f
+      000414 5F               [12]  582 	anl	a,r7
+      000415 F5 16            [12]  583 	mov	_ds_writebyte_PARM_2,a
+                                    584 ;	ds1302.c:192: ds_writebyte(0x80, b); // clear CH
+      000417 75 82 80         [24]  585 	mov	dpl,#0x80
+                                    586 ;	ds1302.c:193: }
+      00041A 02 03 E3         [24]  587 	ljmp	_ds_writebyte
+                                    588 ;------------------------------------------------------------
+                                    589 ;Allocation info for local variables in function 'ds_split2int'
+                                    590 ;------------------------------------------------------------
+                                    591 ;tens_ones                 Allocated to registers r7 
+                                    592 ;------------------------------------------------------------
+                                    593 ;	ds1302.c:358: unsigned char ds_split2int(unsigned char tens_ones) {
+                                    594 ;	-----------------------------------------
+                                    595 ;	 function ds_split2int
+                                    596 ;	-----------------------------------------
+      00041D                        597 _ds_split2int:
+                                    598 ;	ds1302.c:359: return (tens_ones >> 4) * 10 + (tens_ones & 0x0F);
+      00041D E5 82            [12]  599 	mov	a,dpl
+      00041F FF               [12]  600 	mov	r7,a
+      000420 C4               [12]  601 	swap	a
+      000421 54 0F            [12]  602 	anl	a,#0x0f
+      000423 75 F0 0A         [24]  603 	mov	b,#0x0a
+      000426 A4               [48]  604 	mul	ab
+      000427 FE               [12]  605 	mov	r6,a
+      000428 74 0F            [12]  606 	mov	a,#0x0f
+      00042A 5F               [12]  607 	anl	a,r7
+      00042B 2E               [12]  608 	add	a,r6
+      00042C F5 82            [12]  609 	mov	dpl,a
+                                    610 ;	ds1302.c:360: }
+      00042E 22               [24]  611 	ret
+                                    612 ;------------------------------------------------------------
+                                    613 ;Allocation info for local variables in function 'ds_int2bcd'
+                                    614 ;------------------------------------------------------------
+                                    615 ;integer                   Allocated to registers r7 
+                                    616 ;------------------------------------------------------------
+                                    617 ;	ds1302.c:363: unsigned char ds_int2bcd(unsigned char integer) {
+                                    618 ;	-----------------------------------------
+                                    619 ;	 function ds_int2bcd
+                                    620 ;	-----------------------------------------
+      00042F                        621 _ds_int2bcd:
+      00042F AF 82            [24]  622 	mov	r7,dpl
+                                    623 ;	ds1302.c:364: return integer / 10 << 4 | integer % 10;
+      000431 7E 00            [12]  624 	mov	r6,#0x00
+      000433 75 17 0A         [24]  625 	mov	__divsint_PARM_2,#0x0a
+                                    626 ;	1-genFromRTrack replaced	mov	(__divsint_PARM_2 + 1),#0x00
+      000436 8E 18            [24]  627 	mov	(__divsint_PARM_2 + 1),r6
+      000438 8F 82            [24]  628 	mov	dpl,r7
+      00043A 8E 83            [24]  629 	mov	dph,r6
+      00043C C0 07            [24]  630 	push	ar7
+      00043E C0 06            [24]  631 	push	ar6
+      000440 12 05 46         [24]  632 	lcall	__divsint
+      000443 AC 82            [24]  633 	mov	r4,dpl
+      000445 D0 06            [24]  634 	pop	ar6
+      000447 D0 07            [24]  635 	pop	ar7
+      000449 EC               [12]  636 	mov	a,r4
+      00044A C4               [12]  637 	swap	a
+      00044B 54 F0            [12]  638 	anl	a,#0xf0
+      00044D FC               [12]  639 	mov	r4,a
+      00044E 75 17 0A         [24]  640 	mov	__modsint_PARM_2,#0x0a
+      000451 75 18 00         [24]  641 	mov	(__modsint_PARM_2 + 1),#0x00
+      000454 8F 82            [24]  642 	mov	dpl,r7
+      000456 8E 83            [24]  643 	mov	dph,r6
+      000458 C0 04            [24]  644 	push	ar4
+      00045A 12 05 10         [24]  645 	lcall	__modsint
+      00045D AE 82            [24]  646 	mov	r6,dpl
+      00045F AF 83            [24]  647 	mov	r7,dph
+      000461 D0 04            [24]  648 	pop	ar4
+      000463 EC               [12]  649 	mov	a,r4
+      000464 33               [12]  650 	rlc	a
+      000465 95 E0            [12]  651 	subb	a,acc
+      000467 FD               [12]  652 	mov	r5,a
+      000468 EC               [12]  653 	mov	a,r4
+      000469 42 06            [12]  654 	orl	ar6,a
+      00046B ED               [12]  655 	mov	a,r5
+      00046C 42 07            [12]  656 	orl	ar7,a
+      00046E 8E 82            [24]  657 	mov	dpl,r6
+                                    658 ;	ds1302.c:365: }
+      000470 22               [24]  659 	ret
+                                    660 ;------------------------------------------------------------
+                                    661 ;Allocation info for local variables in function 'ds_int2bcd_tens'
+                                    662 ;------------------------------------------------------------
+                                    663 ;integer                   Allocated to registers r7 
+                                    664 ;------------------------------------------------------------
+                                    665 ;	ds1302.c:367: unsigned char ds_int2bcd_tens(unsigned char integer) {
+                                    666 ;	-----------------------------------------
+                                    667 ;	 function ds_int2bcd_tens
+                                    668 ;	-----------------------------------------
+      000471                        669 _ds_int2bcd_tens:
+      000471 AF 82            [24]  670 	mov	r7,dpl
+                                    671 ;	ds1302.c:368: return integer / 10 % 10;
+      000473 7E 00            [12]  672 	mov	r6,#0x00
+      000475 75 17 0A         [24]  673 	mov	__divsint_PARM_2,#0x0a
+                                    674 ;	1-genFromRTrack replaced	mov	(__divsint_PARM_2 + 1),#0x00
+      000478 8E 18            [24]  675 	mov	(__divsint_PARM_2 + 1),r6
+      00047A 8F 82            [24]  676 	mov	dpl,r7
+      00047C 8E 83            [24]  677 	mov	dph,r6
+      00047E 12 05 46         [24]  678 	lcall	__divsint
+      000481 75 17 0A         [24]  679 	mov	__modsint_PARM_2,#0x0a
+      000484 75 18 00         [24]  680 	mov	(__modsint_PARM_2 + 1),#0x00
+                                    681 ;	ds1302.c:369: }
+      000487 02 05 10         [24]  682 	ljmp	__modsint
+                                    683 ;------------------------------------------------------------
+                                    684 ;Allocation info for local variables in function 'ds_int2bcd_ones'
+                                    685 ;------------------------------------------------------------
+                                    686 ;integer                   Allocated to registers r7 
+                                    687 ;------------------------------------------------------------
+                                    688 ;	ds1302.c:371: unsigned char ds_int2bcd_ones(unsigned char integer) {
+                                    689 ;	-----------------------------------------
+                                    690 ;	 function ds_int2bcd_ones
+                                    691 ;	-----------------------------------------
+      00048A                        692 _ds_int2bcd_ones:
+      00048A AF 82            [24]  693 	mov	r7,dpl
+                                    694 ;	ds1302.c:372: return integer % 10;
+      00048C 7E 00            [12]  695 	mov	r6,#0x00
+      00048E 75 17 0A         [24]  696 	mov	__modsint_PARM_2,#0x0a
+                                    697 ;	1-genFromRTrack replaced	mov	(__modsint_PARM_2 + 1),#0x00
+      000491 8E 18            [24]  698 	mov	(__modsint_PARM_2 + 1),r6
+      000493 8F 82            [24]  699 	mov	dpl,r7
+      000495 8E 83            [24]  700 	mov	dph,r6
+                                    701 ;	ds1302.c:373: }
+      000497 02 05 10         [24]  702 	ljmp	__modsint
+                                    703 	.area CSEG    (CODE)
+                                    704 	.area CONST   (CODE)
+                                    705 	.area XINIT   (CODE)
+                                    706 	.area CABS    (ABS,CODE)
