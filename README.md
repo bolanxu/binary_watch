@@ -2,7 +2,7 @@
 
 This is a watch that I made that displays the time in binary.
 
-Source code in C on [STC15W204 microcontroller](https://www.stcmicro.com/stc/stc15w204s.html).
+Source code in C on [STC15W204 microcontroller](https://www.stcmicro.com/stc/stc15w204s.html). Compiled with [SDCC](https://sdcc.sourceforge.net/)
 
 DS1302 as Real-Time Clock (RTC)
 
