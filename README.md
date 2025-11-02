@@ -1,5 +1,7 @@
 # binary_watch
 
+<https://bolanxu.github.io/posts/binary-watch-v2-project/>
+
 This is a watch that I made that displays the time in binary.
 
 Source code in C on [STC15W204 microcontroller](https://www.stcmicro.com/stc/stc15w204s.html). Compiled with [SDCC](https://sdcc.sourceforge.net/)
